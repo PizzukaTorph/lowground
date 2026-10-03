@@ -1,0 +1,50 @@
+@import url("https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap");
+
+:root {
+  color: #f5f0e8;
+  background: #0b0b0d;
+  font-family: "Space Grotesk", system-ui, sans-serif;
+  font-synthesis: none;
+}
+
+* { box-sizing: border-box; }
+body { margin: 0; min-width: 320px; }
+button, input { font: inherit; }
+button { cursor: pointer; }
+
+.shell {
+  width: min(920px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 12vh 0 10vh;
+}
+
+.hero { max-width: 700px; margin-bottom: 40px; }
+.eyebrow { color: #b3ff00; font: 500 12px "DM Mono", monospace; letter-spacing: .16em; }
+h1 { max-width: 620px; margin: 12px 0; font-size: clamp(42px, 8vw, 84px); line-height: .95; letter-spacing: -.06em; }
+.lede { color: #aaa4a0; font-size: 20px; line-height: 1.45; }
+
+.panel {
+  border: 1px solid #2b2b31;
+  background: #121216;
+  border-radius: 18px;
+  padding: 24px;
+  margin-top: 16px;
+}
+label { display: grid; gap: 8px; color: #aaa4a0; font-size: 14px; }
+input {
+  width: 100%; border: 1px solid #35353c; border-radius: 10px;
+  padding: 12px 14px; color: #f5f0e8; background: #0b0b0d; outline: none;
+}
+input:focus { border-color: #b3ff00; }
+.room-row { display: flex; align-items: center; gap: 12px; margin-top: 20px; color: #aaa4a0; }
+code { color: #b3ff00; }
+.actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 24px; }
+button { border: 1px solid #3b3b43; border-radius: 999px; padding: 10px 16px; color: #f5f0e8; background: transparent; }
+button:hover { border-color: #b3ff00; }
+button.primary { color: #0b0b0d; border-color: #b3ff00; background: #b3ff00; font-weight: 700; }
+.status { color: #aaa4a0; font: 14px "DM Mono", monospace; }
+.dot { display: inline-block; width: 8px; height: 8px; margin-right: 8px; border-radius: 50%; background: #69656a; }
+.dot.live { background: #b3ff00; box-shadow: 0 0 12px #b3ff00; }
+.notes { color: #aaa4a0; line-height: 1.6; }
+h2 { color: #f5f0e8; margin-top: 0; }
+@media (max-width: 560px) { .room-row { flex-wrap: wrap; } }
