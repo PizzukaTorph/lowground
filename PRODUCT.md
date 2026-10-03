@@ -23,6 +23,7 @@ A room is a temporary musical session with:
 - optional region or geographic scope;
 - network compatibility status;
 - selected audio mode;
+- text chat;
 - session start and end time;
 - optional recording artifacts.
 
@@ -50,10 +51,11 @@ The first POC is successful when:
 2. the browser detects and selects an input and output device;
 3. the system reports round-trip measurements, jitter and packet loss;
 4. users can exchange live audio without feedback under the documented setup;
-5. users can enable a shared metronome;
-6. the system can capture a short local or stereo recording;
-7. the room can end cleanly and expose a session summary;
-8. failures are visible and explainable.
+5. users can communicate through room text chat;
+6. users can enable a shared metronome;
+7. the system can capture a short local or stereo recording;
+8. the room can end cleanly and expose a session summary;
+9. failures are visible and explainable.
 
 Success is not defined as professional studio quality. It is defined as a reproducible, measurable and musically useful experiment.
 
@@ -61,6 +63,7 @@ Success is not defined as professional studio quality. It is defined as a reprod
 
 - public matchmaking;
 - accounts and billing;
+- camera capture or video streams;
 - mobile musical performance;
 - full DAW functionality;
 - professional amp simulation;
