@@ -30,7 +30,46 @@ A room is a temporary musical session with:
 
 Geographic labels are hints for discovery. Admission and mode selection must use measured latency and connection quality.
 
-## 4. Experience modes
+## 4. Session roles
+
+Room permissions and musical identity are separate concepts.
+
+### Room roles
+
+- **Host**: creates and manages the room, controls session lifecycle and participant access.
+- **Musician**: sends audio and participates in the rehearsal.
+- **Listener**: receives audio and chat but does not send musical audio.
+
+All system users belong to the same user category. These roles describe a user's relation to a specific room, not different kinds of platform accounts.
+
+### Musical roles
+
+A participant may optionally identify as:
+
+- drums;
+- guitar;
+- bass;
+- vocals;
+- keys;
+- other.
+
+Musical roles are used for context, discovery and future matchmaking. They do not grant permissions.
+
+The initial contract is:
+
+```ts
+type RoomRole = "host" | "musician" | "listener";
+
+type MusicalRole =
+  | "drums"
+  | "guitar"
+  | "bass"
+  | "vocals"
+  | "keys"
+  | "other";
+```
+
+## 5. Experience modes
 
 ### Live jam
 
@@ -44,7 +83,7 @@ For rooms where live interaction is possible but not ideal. A shared click, lead
 
 Each participant records locally and the session preserves synchronized takes. This mode remains useful even when live jamming is not.
 
-## 5. POC acceptance criteria
+## 6. POC acceptance criteria
 
 The first POC is successful when:
 
@@ -61,7 +100,7 @@ The first POC is successful when:
 
 Success is not defined as professional studio quality. It is defined as a reproducible, measurable and musically useful experiment.
 
-## 6. Out of scope for the first POC
+## 7. Out of scope for the first POC
 
 - public matchmaking;
 - accounts and billing;
@@ -75,13 +114,13 @@ Success is not defined as professional studio quality. It is defined as a reprod
 - automatic correction of timing;
 - hiding bad network conditions from participants.
 
-## 7. Audio effects
+## 8. Audio effects
 
 The initial POC accepts already-processed audio from a pedalboard, amplifier, or audio interface.
 
 Software effects may be added locally later. When present, the processed signal must be clearly separated from optional dry capture so that remote participants hear the intended sound without preventing later re-amping.
 
-## 8. Integration contract
+## 9. Integration contract
 
 Lowground must remain usable on its own.
 
