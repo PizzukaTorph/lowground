@@ -59,7 +59,9 @@ See:
 - [Architecture](ARCHITECTURE.md)
 - [Architecture decision records](docs/adr/)
 - [Memory index](memory/INDEX.md)
+- [Contributing guide](CONTRIBUTING.md)
 - [Code of Conduct](CODE_OF_CONDUCT.md)
+- [Security policy](SECURITY.md)
 
 ## Community
 
