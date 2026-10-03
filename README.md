@@ -59,6 +59,20 @@ Open `http://localhost:5173`, enter a display name and share the room URL with a
 
 The first scaffold uses browser-native WebRTC and an in-memory signaling service. TURN, persistent rooms, authentication and production deployment are intentionally not included yet.
 
+## Roadmap
+
+The project is delivered as a sequence of testable slices:
+
+1. **Feature 1 — Browser POC:** validate WebRTC audio and the core room experience.
+2. **Feature 2 — Infrastructure:** add deployment, TURN, observability, testing and reconnection.
+3. **Feature 3 — Users, Identity and Room Admission:** add accounts, identity and room-level admission.
+4. **Feature 4 — UI/UX:** make the room clear, accessible and usable across devices.
+5. **Feature 5 — Musical Session:** add chat, diagnostics, shared metronome and recording.
+6. **Feature 6 — UP and ChordStorm Integration:** connect rooms, sessions and musical data to the ecosystem.
+7. **Feature 7 — Advanced Audio:** evaluate richer processing and a desktop client only when real tests justify it.
+
+See the complete [project roadmap](ROADMAP.md).
+
 ## Ecosystem
 
 Lowground is a separate product and repository.
@@ -77,6 +91,7 @@ See:
 
 - [Product specification](PRODUCT.md)
 - [Architecture](ARCHITECTURE.md)
+- [Project roadmap](ROADMAP.md)
 - [Architecture decision records](docs/adr/)
 - [Memory index](memory/INDEX.md)
 - [Contributing guide](CONTRIBUTING.md)
