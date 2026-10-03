@@ -55,7 +55,7 @@ pnpm install
 pnpm dev
 ```
 
-Open `http://localhost:5173`, enter a display name and share the room URL with another browser.
+Open `http://localhost:5173` and share the room URL with another browser. The current scaffold may ask for a temporary display name to distinguish participants during development; this is not the account or identity system planned for Feature 3.
 
 The first scaffold uses browser-native WebRTC and an in-memory signaling service. TURN, persistent rooms, authentication and production deployment are intentionally not included yet.
 
