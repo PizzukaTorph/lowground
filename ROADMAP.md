@@ -18,12 +18,29 @@ Validate the technical core with a small real-world room.
 
 **Outcome:** determine whether a small group can meaningfully play together online.
 
-## Feature 2 — Infrastructure
+## Feature 2 — Realtime Transport and Synchronization
 
-Make the POC reproducible, observable and usable outside localhost.
+Turn the raw P2P experiment into a controlled realtime musical transport without moving the audio session onto the server.
+
+- keep the signaling server in the control plane only;
+- preserve direct peer-to-peer audio as the preferred data path;
+- configure STUN/TURN, with TURN used only when direct connectivity fails;
+- measure end-to-end and per-peer latency, jitter and packet loss;
+- implement or tune small adaptive per-peer jitter buffers where the platform permits;
+- establish a shared room-clock model for timestamp comparison;
+- compensate gradual audio-clock drift without discontinuities;
+- define degraded and unplayable connection states instead of delaying the whole room to the slowest peer;
+- measure browser/WebRTC control limits under real network conditions;
+- define the decision gate for a custom UDP/RTP audio transport if WebRTC cannot meet the required latency or control.
+
+**Outcome:** establish whether Lowground can provide a stable distributed musical session while keeping the server out of the normal audio path.
+
+## Feature 3 — Infrastructure
+
+Make the realtime POC reproducible, observable and usable outside localhost.
 
 - deploy the signaling service;
-- configure STUN/TURN with coturn;
+- deploy coturn;
 - Docker Compose for local and test environments;
 - environment configuration and secret handling;
 - structured logging;
@@ -34,7 +51,7 @@ Make the POC reproducible, observable and usable outside localhost.
 
 **Outcome:** run the playground reliably across different networks and devices.
 
-## Feature 3 — Users, Identity and Room Admission
+## Feature 4 — Users, Identity and Room Admission
 
 Introduce real users without creating a premature social platform.
 
@@ -49,7 +66,7 @@ Introduce real users without creating a premature social platform.
 
 **Outcome:** know who is in a room and what they are allowed to do.
 
-## Feature 4 — UI/UX
+## Feature 5 — UI/UX
 
 Turn the technical playground into a clear, usable room experience.
 
@@ -65,13 +82,13 @@ Turn the technical playground into a clear, usable room experience.
 
 **Outcome:** a new musician can enter, configure audio and understand the room without assistance.
 
-## Feature 5 — Musical Session
+## Feature 6 — Musical Session
 
 Add the collaboration tools required for an actual rehearsal or test session.
 
 - ephemeral text chat;
 - system messages for join and leave events;
-- RTT, jitter and packet-loss diagnostics;
+- realtime connection diagnostics in the room UI;
 - shared metronome;
 - simple rhythm tests;
 - session state and host-controlled start/stop;
@@ -81,7 +98,7 @@ Add the collaboration tools required for an actual rehearsal or test session.
 
 **Outcome:** run a structured musical session and collect evidence about its quality.
 
-## Feature 6 — Underground Platform and ChordStorm Integration
+## Feature 7 — Underground Platform and ChordStorm Integration
 
 Connect Lowground to the wider ecosystem while keeping the project independently useful.
 
@@ -95,9 +112,9 @@ Connect Lowground to the wider ecosystem while keeping the project independently
 
 **Outcome:** make Lowground the live-room layer for UP and ChordStorm without tight repository coupling.
 
-## Feature 7 — Advanced Audio
+## Feature 8 — Advanced Audio
 
-Only after the browser POC and real-world tests prove the need.
+Only after measured P2P/WebRTC tests prove the need.
 
 - richer Web Audio processing and AudioWorklets;
 - simple local effects;
@@ -105,10 +122,10 @@ Only after the browser POC and real-world tests prove the need.
 - effect-chain management;
 - amp and cabinet simulation evaluation;
 - improved routing and monitoring controls;
-- LiveKit or mediasoup evaluation if P2P no longer meets reliability needs;
+- custom UDP/RTP transport evaluation if browser-managed WebRTC does not expose enough realtime control;
 - dedicated desktop audio client if browser limits become material.
 
-**Outcome:** increase audio control without losing the web-first path.
+**Outcome:** increase audio control without abandoning the distributed architecture unless evidence requires a different decision.
 
 ## Delivery rule
 
