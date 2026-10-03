@@ -6,21 +6,46 @@ Lowground is web-first. The initial implementation should run in the browser whe
 
 A native client is a possible later optimization, not a prerequisite for validating the product.
 
-## 2. Initial topology
+## 2. Distributed session topology
+
+Lowground is a distributed audio system. The server orchestrates a room; it does not host or mix the musical session.
+
+The control plane and audio data plane are deliberately separate:
 
 ```text
-Browser A ─┐
-Browser B ─┼── WebRTC media ── direct path when possible
-Browser C ─┘
-                 │
-                 └── TURN relay when direct connectivity fails
+                    CONTROL PLANE
 
-Web application ── signaling/API ── room state and diagnostics
+        Browser A ─┐
+        Browser B ─┼── signaling/API ── Lowground server
+        Browser C ─┘                    room state / ICE /
+                                         admission / diagnostics
+
+                     AUDIO DATA PLANE
+
+        Browser A ───────── Browser B
+             │  ╲             ╱  │
+             │    ╲         ╱    │
+             │      Browser C     │
+             └────────────────────┘
+                  direct P2P media
+
+             direct path preferred
+             TURN relay only when required
 ```
 
-The first implementation should not commit prematurely to a central audio mixer. It should measure whether a small regional room works with browser-to-browser media and TURN fallback.
+For the initial room size of up to six participants, the preferred media topology is a peer-to-peer mesh. A direct peer path keeps the server out of the normal audio path and avoids adding a mandatory server hop.
 
-A server-side forwarding unit or SFU may be introduced when it improves reliability, participant count, recording or observability.
+TURN is a connectivity fallback, not the default audio topology.
+
+### Architectural principle
+
+The Lowground server is responsible for orchestration, not audio transport. Centralizing the audio path is not the default scaling strategy.
+
+If browser-native WebRTC cannot provide sufficient latency, jitter-buffer control, clock-drift handling or audio-pipeline control, Lowground should preserve the distributed P2P model and evaluate a lower-level custom transport, such as UDP/RTP with an appropriate realtime audio codec.
+
+WebRTC already prefers UDP when available. Therefore the future decision is not simply “WebRTC versus UDP”; it is “browser-managed WebRTC versus a lower-level transport that gives Lowground more control.”
+
+A server-side media topology may only be reconsidered for a separately justified capability that cannot reasonably preserve the distributed model.
 
 ## 3. Logical components
 
@@ -62,7 +87,7 @@ Responsible for:
 
 ### Relay infrastructure
 
-TURN is the initial fallback for NAT and firewall traversal. Regional deployment can be added after measuring real test locations.
+STUN supports peer discovery and NAT traversal. TURN is the fallback when peers cannot establish a usable direct path. Regional relay deployment can be added after measuring real test locations.
 
 ### Persistence
 
@@ -95,10 +120,10 @@ Underground Platform and ChordStorm must not import Lowground internals. They sh
 
 ## 6. Evolution path
 
-1. Browser-only regional POC.
-2. Browser POC with TURN and repeatable diagnostics.
-3. Regional room service with persisted sessions.
-4. Optional SFU/relay topology.
+1. Browser-only regional POC using a P2P WebRTC mesh.
+2. Realtime transport hardening: TURN, repeatable diagnostics, per-peer jitter handling, room-clock synchronization and clock-drift compensation.
+3. Infrastructure and deployment hardening.
+4. Persisted room/session metadata and identity.
 5. ChordStorm song/click context.
 6. Underground Platform identity, bands and publishing.
-7. Native audio client only if browser measurements justify it.
+7. Evaluate custom UDP/RTP audio transport or a native client only if measured WebRTC/browser limitations justify it.
