@@ -39,6 +39,26 @@ The first proof of concept will support:
 
 The POC is not a DAW, a complete amp simulator, a social network or a replacement for a professional audio interface.
 
+## Quick start
+
+Requirements:
+
+- Node.js;
+- pnpm;
+- a desktop browser with microphone access;
+- wired headphones for meaningful latency tests.
+
+Install dependencies and start the web app plus signaling server:
+
+```bash
+pnpm install
+pnpm dev
+```
+
+Open `http://localhost:5173`, enter a display name and share the room URL with another browser.
+
+The first scaffold uses browser-native WebRTC and an in-memory signaling service. TURN, persistent rooms, authentication and production deployment are intentionally not included yet.
+
 ## Ecosystem
 
 Lowground is a separate product and repository.
@@ -51,7 +71,7 @@ Integration will happen through documented HTTP/WebSocket APIs and portable cont
 
 ## Status
 
-Early project foundation. No production audio implementation exists yet.
+Early project foundation. The first browser playground scaffold is now in place.
 
 See:
 
