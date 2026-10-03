@@ -1,0 +1,14 @@
+{
+  "name": "lowground",
+  "private": true,
+  "version": "0.0.1",
+  "description": "Low-latency rooms for musicians.",
+  "packageManager": "pnpm@10.0.0",
+  "scripts": {
+    "dev": "pnpm --parallel dev:web dev:signaling",
+    "dev:web": "pnpm --filter @lowground/web dev",
+    "dev:signaling": "pnpm --filter @lowground/signaling dev",
+    "build": "pnpm -r build",
+    "typecheck": "pnpm -r typecheck"
+  }
+}
