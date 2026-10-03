@@ -1,5 +1,15 @@
 export type RoomMode = "live-jam" | "guided-session" | "recording";
 
+export type RoomRole = "host" | "musician" | "listener";
+
+export type MusicalRole =
+  | "drums"
+  | "guitar"
+  | "bass"
+  | "vocals"
+  | "keys"
+  | "other";
+
 export type DiagnosticSample = {
   timestamp: number;
   roundTripTimeMs?: number;
@@ -12,7 +22,8 @@ export type DiagnosticSample = {
 export type Participant = {
   id: string;
   displayName: string;
-  instrument?: string;
+  roomRole: RoomRole;
+  musicalRole?: MusicalRole;
 };
 
 export type Room = {
