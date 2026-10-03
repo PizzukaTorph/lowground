@@ -23,12 +23,15 @@ export default function App() {
   const [status, setStatus] = useState("Ready");
   const [peerCount, setPeerCount] = useState(0);
   const [muted, setMuted] = useState(false);
+  const [remotePeerIds, setRemotePeerIds] = useState<string[]>([]);
+  const [peerVolumes, setPeerVolumes] = useState<Record<string, number>>({});
 
   const socketRef = useRef<WebSocket | null>(null);
   const clientIdRef = useRef("");
   const localStreamRef = useRef<MediaStream | null>(null);
   const peersRef = useRef<PeerConnectionMap>(new Map());
   const audioContainerRef = useRef<HTMLDivElement | null>(null);
+  const remoteAudioRef = useRef<Map<string, HTMLAudioElement>>(new Map());
 
   useEffect(() => {
     return () => disconnect();
@@ -41,12 +44,19 @@ export default function App() {
     }
   }
 
+  function syncPeerState() {
+    const ids = [...peersRef.current.keys()];
+    setRemotePeerIds(ids);
+    setPeerCount(ids.length);
+  }
+
   async function createPeerConnection(peerId: string, initiator: boolean) {
     const existing = peersRef.current.get(peerId);
     if (existing) return existing;
 
     const connection = new RTCPeerConnection({ iceServers: ICE_SERVERS });
     peersRef.current.set(peerId, connection);
+    syncPeerState();
 
     for (const track of localStreamRef.current?.getTracks() ?? []) {
       connection.addTrack(track, localStreamRef.current!);
@@ -60,14 +70,16 @@ export default function App() {
 
     connection.ontrack = (event) => {
       const stream = event.streams[0];
-      if (!stream || !audioContainerRef.current || document.getElementById(`remote-${peerId}`)) return;
+      if (!stream || remoteAudioRef.current.has(peerId)) return;
 
       const audio = document.createElement("audio");
       audio.id = `remote-${peerId}`;
       audio.autoplay = true;
       audio.controls = false;
+      audio.volume = peerVolumes[peerId] ?? 1;
       audio.srcObject = stream;
-      audioContainerRef.current.appendChild(audio);
+      remoteAudioRef.current.set(peerId, audio);
+      audioContainerRef.current?.appendChild(audio);
     };
 
     connection.onconnectionstatechange = () => {
@@ -96,7 +108,7 @@ export default function App() {
     }
 
     if (message.type === "peer-joined") {
-      setPeerCount(peersRef.current.size + 1);
+      setStatus("Musician joined — connecting...");
       return;
     }
 
@@ -123,8 +135,14 @@ export default function App() {
   function removePeer(peerId: string) {
     peersRef.current.get(peerId)?.close();
     peersRef.current.delete(peerId);
-    document.getElementById(`remote-${peerId}`)?.remove();
-    setPeerCount(peersRef.current.size);
+    remoteAudioRef.current.get(peerId)?.remove();
+    remoteAudioRef.current.delete(peerId);
+    setPeerVolumes((current) => {
+      const next = { ...current };
+      delete next[peerId];
+      return next;
+    });
+    syncPeerState();
   }
 
   async function connect() {
@@ -165,9 +183,10 @@ export default function App() {
   function disconnect() {
     socketRef.current?.close();
     socketRef.current = null;
-    for (const peerId of peersRef.current.keys()) removePeer(peerId);
+    for (const peerId of [...peersRef.current.keys()]) removePeer(peerId);
     localStreamRef.current?.getTracks().forEach((track) => track.stop());
     localStreamRef.current = null;
+    setMuted(false);
     setConnected(false);
     setStatus("Ready");
   }
@@ -176,6 +195,17 @@ export default function App() {
     const next = !muted;
     for (const track of localStreamRef.current?.getAudioTracks() ?? []) track.enabled = !next;
     setMuted(next);
+  }
+
+  function setPeerVolume(peerId: string, volume: number) {
+    const audio = remoteAudioRef.current.get(peerId);
+    if (audio) audio.volume = volume;
+    setPeerVolumes((current) => ({ ...current, [peerId]: volume }));
+  }
+
+  function togglePeerMute(peerId: string) {
+    const current = peerVolumes[peerId] ?? 1;
+    setPeerVolume(peerId, current > 0 ? 0 : 1);
   }
 
   return (
@@ -200,9 +230,39 @@ export default function App() {
         </div>
         <div className="actions">
           {!connected ? <button className="primary" onClick={() => void connect()}>Enter room</button> : <button onClick={disconnect}>Leave</button>}
-          {connected && <button onClick={toggleMute}>{muted ? "Unmute" : "Mute"}</button>}
+          {connected && <button onClick={toggleMute}>{muted ? "Unmute" : "Mute me"}</button>}
         </div>
         <p className="status"><span className={connected ? "dot live" : "dot"} />{status} · {peerCount} remote peer{peerCount === 1 ? "" : "s"}</p>
+      </section>
+
+      <section className="panel mixer">
+        <h2>Personal mix</h2>
+        <p>These controls affect only what you hear. They do not change anyone else's mix.</p>
+        {remotePeerIds.length === 0 ? (
+          <p className="muted">Remote musicians will appear here when they connect.</p>
+        ) : (
+          <div className="mixer-list">
+            {remotePeerIds.map((peerId) => {
+              const volume = peerVolumes[peerId] ?? 1;
+              return (
+                <div className="mixer-row" key={peerId}>
+                  <span className="peer-label">Peer {peerId.slice(0, 6)}</span>
+                  <input
+                    aria-label={`Volume for peer ${peerId.slice(0, 6)}`}
+                    type="range"
+                    min="0"
+                    max="1"
+                    step="0.01"
+                    value={volume}
+                    onChange={(event) => setPeerVolume(peerId, Number(event.target.value))}
+                  />
+                  <output>{Math.round(volume * 100)}%</output>
+                  <button onClick={() => togglePeerMute(peerId)}>{volume === 0 ? "Unmute" : "Mute"}</button>
+                </div>
+              );
+            })}
+          </div>
+        )}
       </section>
 
       <section className="panel notes">
