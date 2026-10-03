@@ -1,6 +1,6 @@
 import Fastify from "fastify";
 import websocket from "@fastify/websocket";
-import type { WebSocket } from "ws";
+import { WebSocket } from "ws";
 
 type SignalMessage = {
   type: "offer" | "answer" | "ice-candidate";
@@ -47,7 +47,7 @@ app.get("/ws", { websocket: true }, (socket, request) => {
 
   const broadcast = (message: object, except?: string) => {
     for (const peer of room.values()) {
-      if (peer.id !== except && peer.socket.readyState === peer.socket.OPEN) {
+      if (peer.id !== except && peer.socket.readyState === WebSocket.OPEN) {
         peer.socket.send(JSON.stringify(message));
       }
     }
