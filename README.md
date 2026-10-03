@@ -21,7 +21,7 @@ The first target is a regional room with up to six participants, starting from a
 - Small rooms: the initial limit is six participants.
 - Local monitoring: musicians should hear their own instrument with the lowest practical latency.
 - Honest modes: the product must distinguish live jamming, guided sessions and recording.
-- Open core: the networking and room technology should remain useful outside Underground Platform.
+- Open source: the networking and room technology should remain useful outside Underground Platform.
 - Explicit integrations: Underground Platform and ChordStorm integrate through stable APIs and events, not tight coupling.
 
 ## Initial playground
@@ -59,6 +59,13 @@ See:
 - [Architecture](ARCHITECTURE.md)
 - [Architecture decision records](docs/adr/)
 - [Memory index](memory/INDEX.md)
+- [Code of Conduct](CODE_OF_CONDUCT.md)
+
+## Community
+
+Lowground is built in the open. Issues, experiments, documentation improvements and technical discussion are welcome.
+
+Please read the [Code of Conduct](CODE_OF_CONDUCT.md) before participating.
 
 ## License
 
